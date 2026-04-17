@@ -57,6 +57,10 @@ An ASP.NET Core gRPC-Web backend that receives log uploads, distributes processi
 3. Run dotnet restore
 4. Run dotnet run
 
+#### Log Format:-
+Fields: timestamp | level (INFO/WARN/ERROR/FATAL) | service | message | duration_ms
+Example: 2024-01-15 10:23:41.234 INFO UserService User logged in user_id=4821 duration_ms=120
+
 ## Deployment Architecture:-
 ```
 Browser (React)
@@ -69,3 +73,7 @@ Browser (React)
 ↓
 MongoDB Atlas
 ```
+
+## Demo:-
+
+
