@@ -9,13 +9,16 @@ Built a distributed log analysis backend in ASP.NET Core (.NET 8) — JWT-authen
 
 ## FrontEnd Repo: [Link](https://github.com/Sarthak-Sen/log-analyzer-frontend)
 
-A React-based frontend that provides search, filtering, pagination, and result display for the movie catalogue.
+A React-based frontend that provides real-time log analysis using React, TypeScript, and gRPC-Web that streams live anomaly detection results from a distributed backend as files are processed.
 
 #### Tech Stack:-
 
-1. React 18 + TypeScript
+1. React + TypeScript
 2. Vite
 3. CSS Modules
+4. gRPC-Web (grpc-web)
+5. Protocol Buffers (protobufjs)
+6. Deployed on Vercel
 
 #### Local Setup:-
 
@@ -23,49 +26,46 @@ A React-based frontend that provides search, filtering, pagination, and result d
 2. Run npm install
 3. Create .env.local in the project root
 ```
-   VITE_API_BASE_URL=http://localhost:5001/api
-   VITE_OMDB_API_KEY=your_omdb_key
+   VITE_BACKEND_URL=http://localhost:5001/api
 ```
 4. npm run dev
-
-#### External API:-
-
-OMDb API for poster fetching
 
 
 ## Backend Repo: [Link](https://github.com/Sarthak-Sen/LogAnalyzerBackend)
 
-An ASP.NET Core Web API that provides search and filtering endpoints and ranks results using ML.NET.
+An ASP.NET Core gRPC-Web backend that receives log uploads, distributes processing across background workers via Redis, and streams real-time anomaly detection results to the browser.
 
 #### TechStack:-
-1. .NET 8 (ASP.NET Core Web API)
-2. Entity Framework Core
-3. PostgreSQL (Neon)
-4. ML.NET (Regression – FastTree)
-5. Docker
-6. Hosted on Render
+1. .NET 8 (ASP.NET Core)
+2. gRPC-Web (Grpc.AspNetCore.Web)
+3. Redis (Upstash)
+4. MongoDB (Atlas)
+5. JWT Authentication
+6. Docker
+7. Hosted on Render
 
 #### Core Features:-
-1. Filtering based on genre, rating, etc
-2. Pagination support
-3. ML-based ranking of filtered results
+1. Chunked log upload via REST endpoints
+2. Redis task queue with distributed locking across 4 background workers
+3. Real-time anomaly detection (ERROR_SPIKE, HIGH_LATENCY, LOGIN_FAILURE)
+4. gRPC-Web server streaming for live results
+5. Persistent storage of jobs, logs, and anomalies in MongoDB
 
 #### Local Setup:-
 1. Clone the repository
-2. Run dotnet restore
-3. Run dotnet run
-
-#### Data Source:-
-1. MovieLens dataset with 9,700 movies [Link](https://files.grouplens.org/datasets/movielens/ml-latest-small-README.html)
-2. Uses collaborative filtering to find books liked by similar users
+2. Add appsettings.json with MongoDB, Redis, and JWT config
+3. Run dotnet restore
+4. Run dotnet run
 
 ## Deployment Architecture:-
 ```
-React (Vercel)
-↓
+Browser (React)
+↓ REST (chunk upload)
 ASP.NET Core API (Docker, Render)
+↓ Redis Task Queue (Upstash)
+Background Workers (x4)
+↓ gRPC-Web Server Stream
+Browser (React)
 ↓
-PostgreSQL (Neon)
-↓
-ML.NET ranking model (rankingModel.zip)
+MongoDB Atlas
 ```
