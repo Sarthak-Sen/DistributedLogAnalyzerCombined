@@ -62,17 +62,8 @@ Fields: timestamp | level (INFO/WARN/ERROR/FATAL) | service | message | duration
 Example: 2024-01-15 10:23:41.234 INFO UserService User logged in user_id=4821 duration_ms=120
 
 ## Deployment Architecture:-
-```
-Browser (React)
-↓ REST (chunk upload)
-ASP.NET Core API (Docker, Render)
-↓ Redis Task Queue (Upstash)
-Background Workers (x4)
-↓ gRPC-Web Server Stream
-Browser (React)
-↓
-MongoDB Atlas
-```
+
+![Alt text](image.svg)
 
 ## Demo:-
 
